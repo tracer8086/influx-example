@@ -8,8 +8,10 @@ services:
       - 8086:8086
     volumes:
       - type: volume
-        source: influxdata
+        source: telemetry-data
         target: /var/lib/influxdb
+    networks:
+      - influx-network
     container_name: influx_server
   
   chronograf:
@@ -20,13 +22,18 @@ services:
       - 8888:8888
     volumes:
       - type: volume
-        source: chronografdata
+        source: chronograf-data
         target: /var/lib/chronograf
+    networks:
+      - influx-network
     container_name: chronograf_server
     command:
       - --influxdb-url=http://influxdb:8086
 
 volumes:
-  influxdata:
-  influxconfig:
-  chronografdata:
+  telemetry-data:
+  chronograf-data:
+
+networks:
+  influx-network:
+    driver: bridge
